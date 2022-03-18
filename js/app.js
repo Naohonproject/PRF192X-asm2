@@ -21,12 +21,15 @@ function inputBtnHandler() {
 }
 
 //Định nghĩa hàm assignUserScore , hàm này lấy mảng keys để gọi lại phương thức forEach và truyền vào nó là một callback function với hai tham số, một là từng key trong mảng keys và index của chúng,sử dụng key để truy cập vào từng thuộc tính trong đối tượng testScore và gán cho chúng với giá trị bằng từng phần tử trong mảng userInputs bằng cách sử dụng index của các keys trong mảng cũng trùng với index của mảng serInputs.sau khi gán xong thì sẽ tiến hành reset các ô ít put cho chuỗi rỗng để reresh form input.
+
+//start defining assignUserScore
 function assignUserScore() {
 	keys.forEach(function (key, index) {
 		testScore[key] = userInputs[index].value;
 		userInputs[index].value = "";
 	});
 }
+//end defining assignUserScore
 
 // lấy ra button tính điểm trung bình và gán cho nó sự kiện click bằng một callback function tên là averageScoreCalc được định nghĩa ở dưới.
 var averageBtn = document.querySelector("#average-btn");
@@ -44,6 +47,8 @@ function roundToNumberOfPrecision(number) {
 var scoreTable = document
 	.getElementById("score-table")
 	.getElementsByTagName("tbody")[0];
+
+//start defining checkInputs function
 
 function checkInput() {
 	// lấy ra một mảng gồm các phần tử là các mảng chứ key và value của đối tượng testScore
@@ -64,8 +69,11 @@ function checkInput() {
 
 	return isFillInAllInputs && isScore;
 }
+//end defining checkInput
 
 // định nghĩa hàm displayScores
+//start defining displayScores
+
 function displayScores() {
 	// kiểm tra hai điều kiện trên, nếu cả hai đúng thì tiến hành tạo bảng dòng mới từ bảng hiện có và render dữ liệu mà người dùng nhập vào với các trường dữ liệu tương ứng trong bảng, mỗi lần người dùng ấn "Nhập" thì sẽ tạo ra một dòng mới phía dưới cùng của bảng
 	if (checkInput()) {
@@ -89,12 +97,16 @@ function displayScores() {
 				);
 			}
 		}
+		var cell6 = row.insertCell(5);
 	} else {
 		alert("ban phai dien dung thong tin");
 	}
 }
+//end of defining displayScores
 
-//Hàm tính trung bình của một mảng gồm number
+//Hàm tính trung bình, hàm này nhận vào một mảng số và trả về giá trị trung bình của mảng.
+
+//start defining averageCalc function
 function averageCalc(array) {
 	var isArrayOfNumber = array.every((a) => {
 		return typeof a === "number";
@@ -109,8 +121,11 @@ function averageCalc(array) {
 		return "error,retype";
 	}
 }
+//end defining averageCalc function
 
-//Hàm tính điểm trung bình
+//Hàm tính điểm trung bình,Hàm này gọi tới dòng mới nhất trong bản tại thời điểm gọi hàm và từ đó lấy ra các ô trong hàng, thông qua đó tính ra điểm trung bình của người tương ứng và gán chúng lại vào ô cuối cùng trong hàng , tương ứng với cột trung bình(hàm này có sử dụng tới hàm  averageCalc vừa được định nghĩa ở trên )
+
+//start defining averageScoreCalc function
 function averageScoreCalc() {
 	var latestRow = document
 		.querySelector("table")
@@ -118,18 +133,22 @@ function averageScoreCalc() {
 	var childNodes = latestRow.childNodes;
 	var scores = [];
 	childNodes.forEach(function (childNode, index) {
-		if (index > 1) {
+		if (index > 1 && index < childNodes.length - 1) {
 			scores.push(Number(childNode.textContent));
 		}
 	});
-	var lastestCell = latestRow.insertCell(5);
+	var lastestCell = latestRow.lastChild;
 	lastestCell.innerHTML = roundToNumberOfPrecision(averageCalc(scores));
 }
+//end defining averageScoreCalc function
 
+// lấy ra nút đánh giá học sinh và gán cho nó sự kiện click, handler là một callback function tên là determineExelentStudents
 var excelStudentDet = document.querySelector("#excel-btn");
-
 excelStudentDet.addEventListener("click", determineExelentStudents);
 
+// hàm này xử lý sự kiện click vào nút "xác định học sinh giỏi" bằng cách lấy hết tất cả các dòng trong bảng (trừ dòng header),giá trị trả về là một NodeList, do đó ta có thẻ loop qua các phần tử trong nó bằng phương thức forEach và cứ mỗi lần lặp là sẽ đánh giá xem liệu điểm trung bình của người tương ứng với mỗi dòng có lớn hơn hoặc bằng 8.0 hay không ,nếu có thì bôi đổ tất cả các ô trong dòng bằng cách gán dòng đó cho một class tên là red-text.
+
+//start defining averageScoreCalc function
 function determineExelentStudents() {
 	var bodyOfTable = document
 		.querySelector("table")
@@ -138,9 +157,11 @@ function determineExelentStudents() {
 	var childNodesOfBody = bodyOfTable.childNodes;
 	childNodesOfBody.forEach(function (childNode, index) {
 		var averageScore = Number(childNode.lastChild.textContent);
-
 		if (averageScore >= 8.0) {
 			childNode.classList = "red-text";
 		}
 	});
 }
+//end defining averageScoreCalc function
+
+// End of Application .Cảm ơn bạn đã kiên nhẫn.
